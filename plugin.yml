@@ -1,0 +1,9 @@
+name: Parkour
+main: parkour.ParkourPlugin
+version: 0.1
+description: >
+             Plugin for timing obstacle courses
+softdepend: [Vault]
+commands:
+  pk:
+    description: Parkour commands.
