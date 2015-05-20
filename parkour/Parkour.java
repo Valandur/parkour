@@ -1,7 +1,9 @@
 package parkour;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
@@ -16,7 +18,7 @@ public class Parkour
 	private Location maxArea;
 	private int maxHighscores;
 	private List<ParkourHighscore> highscores = new ArrayList<ParkourHighscore>();
-	private List<ParkourScoreboard> highscoreSigns = new ArrayList<ParkourScoreboard>();
+	private HashMap<Integer, ParkourScoreboard> highscoreSigns = new HashMap<Integer, ParkourScoreboard>();
 	
 	public int getId() {
 		return id;
@@ -42,7 +44,7 @@ public class Parkour
 	public List<ParkourHighscore> getHighscores() {
 		return highscores;
 	}
-	public List<ParkourScoreboard> getHighscoreScoreboards() {
+	public HashMap<Integer, ParkourScoreboard> getHighscoreScoreboards() {
 		return highscoreSigns;
 	}
 	
@@ -104,31 +106,22 @@ public class Parkour
 	}
 	
 	public void setScoreboard(int id, Sign nameSign, Sign scoreSign) {
-		if (id < highscoreSigns.size()) {
-			highscoreSigns.set(id, new ParkourScoreboard(nameSign, scoreSign));
-		} else {
-			for (int i = highscoreSigns.size(); i < id; i++) {
-				highscoreSigns.add(null);
-			}
-			highscoreSigns.add(new ParkourScoreboard(nameSign, scoreSign));
-		}
+        highscoreSigns.put(id, new ParkourScoreboard(nameSign, scoreSign));
 	}
 	public void updateScoreboards() {
-		for (int i = 0; i < highscoreSigns.size(); i++) {
-			if (highscoreSigns.get(i) != null) {
-				ParkourScoreboard sb = highscoreSigns.get(i);
-				for (int j = 0; j < 4; j++) {
-					if (i * 4 + j >= highscores.size()) {
-						sb.getNameSign().setLine(j, "");
-						sb.getScoreSign().setLine(j, "");
-					} else {
-						sb.getNameSign().setLine(j, highscores.get(i * 4 + j).getPlayerName());
-						sb.getScoreSign().setLine(j, "" + highscores.get(i * 4 + j).getTime());
-					}
-				}
-				sb.getNameSign().update(true);
-				sb.getScoreSign().update(true);
-			}
+		for (Integer key : highscoreSigns.keySet()) {
+            ParkourScoreboard sb = highscoreSigns.get(key);
+            for (int j = 0; j < 4; j++) {
+                if (key * 4 + j >= highscores.size()) {
+                    sb.getNameSign().setLine(j, "");
+                    sb.getScoreSign().setLine(j, "");
+                } else {
+                    sb.getNameSign().setLine(j, highscores.get(key * 4 + j).getPlayerName());
+                    sb.getScoreSign().setLine(j, "" + highscores.get(key * 4 + j).getTime());
+                }
+            }
+            sb.getNameSign().update(true);
+            sb.getScoreSign().update(true);
 		}
 	}
 }

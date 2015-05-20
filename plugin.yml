@@ -1,4 +1,4 @@
-name: Parkour
+name: ParkourPlugin
 main: parkour.ParkourPlugin
 version: 0.2
 description: >
